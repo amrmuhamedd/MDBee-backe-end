@@ -1,98 +1,150 @@
+# Patients Management API
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A RESTful API for patient management built using NestJS, featuring cursor-based pagination and a clean repository pattern architecture. This API allows for efficient management of patient records with robust filtering and pagination capabilities.
 
-## Project setup
+## Technologies Used
+
+- **Framework**: [NestJS](https://nestjs.com/) (v11) - A progressive Node.js framework
+- **Language**: TypeScript
+- **Database**: PostgreSQL with TypeORM
+- **Testing**: Jest (Unit tests & E2E tests)
+- **Documentation**: Swagger/OpenAPI
+- **Validation**: class-validator and class-transformer
+- **Data Generation**: Faker.js
+
+## Key Features
+
+- **Complete CRUD Operations**: Create, read, update, and delete patients
+- **Cursor-Based Pagination**: Efficient data retrieval for large datasets
+- **Repository Pattern**: Clean separation of data access logic
+- **Comprehensive Testing**: Unit tests and E2E tests for all components
+- **Data Seeding**: Easy database population with fake data
+- **API Documentation**: Auto-generated using Swagger
+
+## Project Setup
+
+### Prerequisites
+
+- Node.js (v16+)
+- Yarn package manager
+- PostgreSQL database
+
+### Installation
 
 ```bash
+# Install dependencies
 $ yarn install
+
+# Configure environment variables
+$ cp .env.example .env
+# Edit .env file with your database credentials
 ```
 
-## Compile and run the project
+### Database Setup
+
+Ensure PostgreSQL is running and the database specified in your `.env` file exists. The application will automatically create the necessary tables on startup if `synchronize: true` is set in the TypeORM configuration.
+
+### Seeding the Database
+
+To populate the database with sample patient data:
 
 ```bash
-# development
-$ yarn run start
+# Seed the database with 200 fake patient records (default)
+$ yarn seed
 
-# watch mode
-$ yarn run start:dev
+# Seed with a specific number of records
+$ yarn seed 500
 
-# production mode
-$ yarn run start:prod
+# Clear all patient data
+$ yarn seed:clear
+
+# Clear and reseed the database
+$ yarn seed:refresh
 ```
 
-## Run tests
+## Running the Application
 
 ```bash
-# unit tests
-$ yarn run test
+# Development mode
+$ yarn dev
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+# Production mode
+$ yarn build
+$ yarn start:prod
 ```
 
-## Deployment
+Once the application is running, you can access:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- API endpoints at http://localhost:3000/patients
+- Swagger documentation at http://localhost:3000/api
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Running Tests
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# Unit tests
+$ yarn test
+
+# E2E tests (mock-based)
+$ yarn test:e2e
+
+# All E2E tests (including integration tests that require a database)
+$ yarn test:e2e:all
+
+# Test coverage
+$ yarn test:cov
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## API Endpoints
 
-## Resources
+### Patients
 
-Check out a few resources that may come in handy when working with NestJS:
+- `GET /patients` - List all patients with cursor-based pagination
+  - Query parameters:
+    - `cursor`: ID of the last item in the previous page
+    - `limit`: Number of items per page (default: 10)
+    - `status`: Filter patients by status
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- `GET /patients/:id` - Get a specific patient by ID
 
-## Support
+- `POST /patients` - Create a new patient
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- `PUT /patients/:id` - Update an existing patient
 
-## Stay in touch
+- `DELETE /patients/:id` - Delete a patient
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Architecture
 
-## License
+The application follows a clean architecture approach with the following components:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Entity**: Defines the database schema for patients
+- **DTO**: Data Transfer Objects for input validation and response formatting
+- **Repository**: Interface and implementation for data access using TypeORM
+- **Service**: Business logic layer
+- **Controller**: HTTP request handling and route definitions
+- **Module**: NestJS module for dependency injection and component organization
+
+## Cursor-Based Pagination
+
+This project implements cursor-based pagination (also known as keyset pagination) which offers several advantages over traditional offset-based pagination:
+
+- Consistent performance regardless of dataset size
+- No issues with concurrent inserts/deletes
+- Prevents duplicates or skipped items when data changes between requests
+
+The pagination response includes:
+
+```json
+{
+  "data": [...],
+  "pagination": {
+    "hasNextPage": true,
+    "nextCursor": "42"
+  }
+}
+```
